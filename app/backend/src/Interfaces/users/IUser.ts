@@ -1,6 +1,6 @@
 import { Identifiable } from '..';
 
-export default interface IUser extends Identifiable {
+export interface IUser extends Identifiable {
   username: string,
   role: string,
   email: string,
