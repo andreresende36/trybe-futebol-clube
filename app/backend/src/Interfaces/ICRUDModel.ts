@@ -10,7 +10,7 @@ export interface ICRUDModelReader<T> {
 }
 
 export interface ICRUDModelUpdater<T> {
-  update(id: ID, data: Partial<T>): Promise<T | null>,
+  update(id: ID, data: Partial<T>): Promise<T | number | null>,
 }
 
 export interface ICRUDModelDeleter {

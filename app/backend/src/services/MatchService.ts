@@ -19,4 +19,20 @@ export default class MatchService {
     if (!match) return { status: 'NOT_FOUND', data: { message: `Match ${id} not found` } };
     return { status: 'SUCCESSFUL', data: match };
   }
+
+  async finishMatch(
+    id: ID,
+    inProgressStatus: Partial<IMatch>,
+  ): Promise<ServiceResponse<{ message: string }>> {
+    await this.matchModel.update(id, inProgressStatus);
+    return { status: 'SUCCESSFUL', data: { message: 'finished' } };
+  }
+
+  async updateMatch(
+    id: ID,
+    newData: Partial<IMatch>,
+  ): Promise<ServiceResponse<{ message: string }>> {
+    await this.matchModel.update(id, newData);
+    return { status: 'SUCCESSFUL', data: { message: 'updated' } };
+  }
 }

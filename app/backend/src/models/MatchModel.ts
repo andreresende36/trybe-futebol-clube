@@ -3,6 +3,7 @@ import SequelizeMatch from '../database/models/SequelizeMatch';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 import { ID } from '../Interfaces';
+import { IMatch } from '../Interfaces/matches/IMatch';
 
 export default class MatchModel implements IMatchModel {
   private model = SequelizeMatch;
@@ -34,5 +35,13 @@ export default class MatchModel implements IMatchModel {
     });
     if (!dbResult) return null;
     return dbResult;
+  }
+
+  async update(id: ID, data: Partial<IMatch>): Promise<number | null> {
+    const [updateResult] = await this.model.update(
+      data,
+      { where: { id } },
+    );
+    return updateResult;
   }
 }
