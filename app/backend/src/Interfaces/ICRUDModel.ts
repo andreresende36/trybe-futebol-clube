@@ -5,7 +5,7 @@ export interface ICRUDModelCreator<T> {
 }
 
 export interface ICRUDModelReader<T> {
-  findAll(): Promise<T[]>,
+  findAll(inProgress?: string): Promise<T[]>,
   findById(id: ID): Promise<T | null>,
 }
 
