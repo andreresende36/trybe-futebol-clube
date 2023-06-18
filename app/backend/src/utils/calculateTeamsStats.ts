@@ -20,12 +20,12 @@ const handleWin = (match: IMatch) => {
   if (teamStats.homeOrAway === 'home') {
     teamStats.goalsFavor += match.homeTeamGoals;
     teamStats.goalsOwn += match.awayTeamGoals;
-    teamStats.goalsBalance += teamStats.goalsFavor - teamStats.goalsOwn;
+    teamStats.goalsBalance += match.homeTeamGoals - match.awayTeamGoals;
   }
   if (teamStats.homeOrAway === 'away') {
     teamStats.goalsFavor += match.awayTeamGoals;
     teamStats.goalsOwn += match.homeTeamGoals;
-    teamStats.goalsBalance += teamStats.goalsFavor - teamStats.goalsOwn;
+    teamStats.goalsBalance += match.awayTeamGoals - match.homeTeamGoals;
   }
   teamStats.efficiency = Number(((teamStats.totalPoints / (teamStats.totalGames * 3)) * 100)
     .toFixed(2));
@@ -38,12 +38,12 @@ const handleLoss = (match: IMatch) => {
   if (teamStats.homeOrAway === 'home') {
     teamStats.goalsFavor += match.homeTeamGoals;
     teamStats.goalsOwn += match.awayTeamGoals;
-    teamStats.goalsBalance += teamStats.goalsFavor - teamStats.goalsOwn;
+    teamStats.goalsBalance += match.homeTeamGoals - match.awayTeamGoals;
   }
   if (teamStats.homeOrAway === 'away') {
     teamStats.goalsFavor += match.awayTeamGoals;
     teamStats.goalsOwn += match.homeTeamGoals;
-    teamStats.goalsBalance += teamStats.goalsFavor - teamStats.goalsOwn;
+    teamStats.goalsBalance += match.awayTeamGoals - match.homeTeamGoals;
   }
   teamStats.efficiency = Number(((teamStats.totalPoints / (teamStats.totalGames * 3)) * 100)
     .toFixed(2));
@@ -56,12 +56,12 @@ const handleDraw = (match: IMatch) => {
   if (teamStats.homeOrAway === 'home') {
     teamStats.goalsFavor += match.homeTeamGoals;
     teamStats.goalsOwn += match.awayTeamGoals;
-    teamStats.goalsBalance += teamStats.goalsFavor - teamStats.goalsOwn;
+    teamStats.goalsBalance += match.homeTeamGoals - match.awayTeamGoals;
   }
   if (teamStats.homeOrAway === 'away') {
     teamStats.goalsFavor += match.awayTeamGoals;
     teamStats.goalsOwn += match.homeTeamGoals;
-    teamStats.goalsBalance += teamStats.goalsFavor - teamStats.goalsOwn;
+    teamStats.goalsBalance += match.awayTeamGoals - match.homeTeamGoals;
   }
   teamStats.efficiency = Number(((teamStats.totalPoints / (teamStats.totalGames * 3)) * 100)
     .toFixed(2));

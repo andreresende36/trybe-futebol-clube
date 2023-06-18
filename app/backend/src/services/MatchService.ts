@@ -64,10 +64,6 @@ export default class MatchService {
       },
     ));
     const leaderboard = calculateTeamStats(finishedMatchesGroupedByTeamId, teams);
-    const leaderboardWithoutEfficiency = leaderboard.map((item) => {
-      const { efficiency, ...response } = item;
-      return response;
-    });
-    return { status: 'SUCCESSFUL', data: leaderboardWithoutEfficiency };
+    return { status: 'SUCCESSFUL', data: leaderboard };
   }
 }
