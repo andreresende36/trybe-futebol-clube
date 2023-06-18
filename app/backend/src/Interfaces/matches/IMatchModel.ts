@@ -4,6 +4,7 @@ import { ID } from '..';
 
 interface FindMatchesMethod<T> {
   findFinishedMatchesByTeamId(teamId: ID): Promise<T[]>
+  findFinishedMatchesByTeamIdAndHomeOrAway(teamId: ID, homeOrAway: string): Promise<T[]>
 }
 
 export type IMatchModel =

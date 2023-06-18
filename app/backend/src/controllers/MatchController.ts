@@ -34,7 +34,13 @@ export default class MatchController {
     return res.status(httpStatusMapper(status)).json(data);
   }
 
-  async getLeaderboard(_req: Request, res: Response) {
+  async getLeaderboardHomeOrAway(req: Request, res: Response) {
+    const { homeOrAway } = req.params;
+    const { status, data } = await this.matchService.getLeaderboardHomeOrAway(homeOrAway);
+    return res.status(httpStatusMapper(status)).json(data);
+  }
+
+  async getLeaderboard(req: Request, res: Response) {
     const { status, data } = await this.matchService.getLeaderboard();
     return res.status(httpStatusMapper(status)).json(data);
   }

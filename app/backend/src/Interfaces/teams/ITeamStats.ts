@@ -8,6 +8,5 @@ export interface ITeamsStats {
   goalsFavor: number,
   goalsOwn: number,
   goalsBalance: number,
-  efficiency?: number,
-  homeOrAway?: string,
+  efficiency: number,
 }

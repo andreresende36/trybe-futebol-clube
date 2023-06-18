@@ -37,18 +37,40 @@ export default class MatchModel implements IMatchModel {
     return dbResult;
   }
 
-  async findFinishedMatchesByTeamId(teamId: ID): Promise<IMatch[]> {
+  async findFinishedMatchesByTeamId(
+    teamId: ID,
+  ): Promise<IMatch[]> {
     const dbResult = await this.model.findAll({
-      include: [{ model: this.sequelizeTeam, as: 'homeTeam', attributes: ['teamName'] },
-        { model: this.sequelizeTeam, as: 'awayTeam', attributes: ['teamName'] },
-      ],
       attributes: ['id', 'homeTeamId', 'homeTeamGoals', 'awayTeamId',
         'awayTeamGoals', 'inProgress'],
       where: {
         [Op.or]: [
           { inProgress: false, homeTeamId: teamId }, { inProgress: false, awayTeamId: teamId },
         ],
-      } });
+      }
+      ,
+    });
+    return dbResult.map(
+      ({ id, homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals, inProgress }) => (
+        { id, homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals, inProgress }
+      ),
+    );
+  }
+
+  async findFinishedMatchesByTeamIdAndHomeOrAway(
+    teamId: ID,
+    homeOrAway: string,
+  ): Promise<IMatch[]> {
+    const dbResult = await this.model.findAll({
+      attributes: ['id', 'homeTeamId', 'homeTeamGoals', 'awayTeamId',
+        'awayTeamGoals', 'inProgress'],
+      where: {
+        [Op.or]: [homeOrAway === 'home'
+          ? { inProgress: false, homeTeamId: teamId }
+          : { inProgress: false, awayTeamId: teamId }],
+      }
+      ,
+    });
     return dbResult.map(
       ({ id, homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals, inProgress }) => (
         { id, homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals, inProgress }

@@ -55,11 +55,25 @@ export default class MatchService {
     return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
   }
 
+  async getLeaderboardHomeOrAway(homeOrAway: string): Promise<ServiceResponse<ITeamsStats[]>> {
+    const teams = await this.teamModel.findAll();
+    const finishedMatchesGroupedByTeamId = await Promise.all(teams.map(
+      async ({ id: teamId }) => {
+        const matches = await this.matchModel
+          .findFinishedMatchesByTeamIdAndHomeOrAway(teamId, homeOrAway);
+        return matches;
+      },
+    ));
+    const leaderboard = calculateTeamStats(finishedMatchesGroupedByTeamId, teams);
+    return { status: 'SUCCESSFUL', data: leaderboard };
+  }
+
   async getLeaderboard(): Promise<ServiceResponse<ITeamsStats[]>> {
     const teams = await this.teamModel.findAll();
     const finishedMatchesGroupedByTeamId = await Promise.all(teams.map(
       async ({ id: teamId }) => {
-        const matches = await this.matchModel.findFinishedMatchesByTeamId(teamId);
+        const matches = await this.matchModel
+          .findFinishedMatchesByTeamId(teamId);
         return matches;
       },
     ));

@@ -76,9 +76,9 @@ const calculateTeamStats = (
     matchesByTeam.forEach((match) => {
       teamStats.homeOrAway = match.homeTeamId === index + 1 ? 'home' : 'away';
       const matchResult = getMatchResult(match.homeTeamGoals, match.awayTeamGoals);
-      if (matchResult === 'draw') { handleDraw(match); }
-      if (teamStats.homeOrAway === matchResult) { handleWin(match); }
-      if (teamStats.homeOrAway !== matchResult) { handleLoss(match); }
+      if (matchResult === 'draw') { return handleDraw(match); }
+      if (teamStats.homeOrAway === matchResult) { return handleWin(match); }
+      if (teamStats.homeOrAway !== matchResult) { return handleLoss(match); }
     });
     const { homeOrAway, ...parser } = { ...teamStats };
     teamStats.clear();
