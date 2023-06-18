@@ -1,10 +1,13 @@
 import MatchModel from '../models/MatchModel';
 import TeamModel from '../models/TeamModel';
 import { IMatch } from '../Interfaces/matches/IMatch';
+// import { ITeam } from '../Interfaces/teams/ITeam';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 import { ITeamModel } from '../Interfaces/teams/ITeamModel';
 import { ID, NewEntity } from '../Interfaces';
 import { ServiceResponse } from '../Interfaces/ServiceResponse';
+import calculateTeamStats from '../utils/calculateTeamsStats';
+import { ITeamsStats } from '../Interfaces/teams/ITeamStats';
 
 export default class MatchService {
   constructor(
@@ -50,5 +53,21 @@ export default class MatchService {
     }
 
     return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
+  }
+
+  async getLeaderboard(): Promise<ServiceResponse<ITeamsStats[]>> {
+    const teams = await this.teamModel.findAll();
+    const finishedMatchesGroupedByTeamId = await Promise.all(teams.map(
+      async ({ id: teamId }) => {
+        const matches = await this.matchModel.findFinishedMatchesByTeamId(teamId);
+        return matches;
+      },
+    ));
+    const leaderboard = calculateTeamStats(finishedMatchesGroupedByTeamId, teams);
+    const leaderboardWithoutEfficiency = leaderboard.map((item) => {
+      const { efficiency, ...response } = item;
+      return response;
+    });
+    return { status: 'SUCCESSFUL', data: leaderboardWithoutEfficiency };
   }
 }

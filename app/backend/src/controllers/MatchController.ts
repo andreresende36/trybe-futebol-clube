@@ -33,4 +33,9 @@ export default class MatchController {
     const { status, data } = await this.matchService.createMatch(req.body);
     return res.status(httpStatusMapper(status)).json(data);
   }
+
+  async getLeaderboard(_req: Request, res: Response) {
+    const { status, data } = await this.matchService.getLeaderboard();
+    return res.status(httpStatusMapper(status)).json(data);
+  }
 }

@@ -10,7 +10,6 @@ export default class MatchModel implements IMatchModel {
   private sequelizeTeam = SequelizeTeam;
 
   async findAll(inProgress: string): Promise<SequelizeMatch[]> {
-    const parser = inProgress === 'true';
     const dbResult = await this.model.findAll({
       include: [{ model: this.sequelizeTeam, as: 'homeTeam', attributes: ['teamName'] },
         { model: this.sequelizeTeam, as: 'awayTeam', attributes: ['teamName'] },
@@ -19,7 +18,8 @@ export default class MatchModel implements IMatchModel {
         'awayTeamGoals', 'inProgress'],
       where: {
         [Op.or]: !inProgress
-          ? [{ inProgress: true }, { inProgress: false }] : [{ inProgress: parser }],
+          ? [{ inProgress: true }, { inProgress: false }]
+          : [{ inProgress: inProgress === 'true' }],
       },
     });
     return dbResult;
@@ -35,6 +35,25 @@ export default class MatchModel implements IMatchModel {
     });
     if (!dbResult) return null;
     return dbResult;
+  }
+
+  async findFinishedMatchesByTeamId(teamId: ID): Promise<IMatch[]> {
+    const dbResult = await this.model.findAll({
+      include: [{ model: this.sequelizeTeam, as: 'homeTeam', attributes: ['teamName'] },
+        { model: this.sequelizeTeam, as: 'awayTeam', attributes: ['teamName'] },
+      ],
+      attributes: ['id', 'homeTeamId', 'homeTeamGoals', 'awayTeamId',
+        'awayTeamGoals', 'inProgress'],
+      where: {
+        [Op.or]: [
+          { inProgress: false, homeTeamId: teamId }, { inProgress: false, awayTeamId: teamId },
+        ],
+      } });
+    return dbResult.map(
+      ({ id, homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals, inProgress }) => (
+        { id, homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals, inProgress }
+      ),
+    );
   }
 
   async update(id: ID, data: Partial<IMatch>): Promise<number | null> {
